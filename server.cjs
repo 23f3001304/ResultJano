@@ -124,6 +124,7 @@ const processRolls = async (browser, rolls, websiteURL, semesterType, academicYe
     console.log(`Attempting to find and click ${romanSemester} semester for ${branch}`);
     const clicked = await page.evaluate((romanSem, branchName) => {
       const links = Array.from(document.querySelectorAll('a'));
+      console.log(links);
       for (const link of links) {
         if (link.textContent.toLowerCase().includes(romanSem.toLowerCase()) && link.textContent.toLowerCase().includes(branchName.toLowerCase())) {
           link.click(); return true;

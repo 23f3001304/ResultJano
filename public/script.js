@@ -416,11 +416,16 @@ document
   });
 
 window.addEventListener("beforeunload", function () {
-  if (activeJobId) {
-    navigator.sendBeacon(`/cancel/${activeJobId}`, JSON.stringify({}));
-    console.log(`Auto-canceling job ${activeJobId} due to page reload/close`);
+  if (activeJobId && isJobRunning === true) {
+    try {
+      navigator.sendBeacon(`/cancel/${activeJobId}`, "");
+      console.log(`Auto-canceling running job ${activeJobId}`);
+    } catch (_) {
+      // ignore
+    }
   }
 });
+
 
 function formatStep(step) {
   switch (step) {
