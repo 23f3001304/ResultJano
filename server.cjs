@@ -4,6 +4,7 @@ const path = require('path');
 const cors = require('cors');
 const puppeteer = require('puppeteer');
 const { mergePDFs } = require('./utils/mergePDFs.cjs');
+const { Console } = require('console');
 
 const app = express();
 const PORT = process.env.PORT || 5002;
@@ -130,6 +131,7 @@ const processRolls = async (browser, rolls, websiteURL, semesterType, academicYe
         console.log(`Examining romansem: ${romanSem.toLowerCase()}`);
         if(romanSem === 'i'|| romanSem === 'ii'){
           if (link.textContent.toLowerCase().includes('b.e.') && link.textContent.toLowerCase().includes(`${romanSem.toLowerCase() + "st"}`) && !link.textContent.toLowerCase().includes('back') && !link.textContent.toLowerCase().includes('semex')) {
+            console.log(link)
             link.click(); return true;
         }
       }
