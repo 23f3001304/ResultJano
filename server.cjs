@@ -100,7 +100,7 @@ const toRomanNumeral = num => {
 
 const createBrowser = async () => {
   console.log('Launching Puppeteer browser');
-  return await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+  return await puppeteer.launch({ headless: false, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
 };
 
 const processRolls = async (browser, rolls, websiteURL, semesterType, academicYear, romanSemester, branch, jobId) => {
@@ -121,21 +121,25 @@ const processRolls = async (browser, rolls, websiteURL, semesterType, academicYe
     console.log(`Clicking on ${semesterType}Sem${academicYear}`);
     await page.click(`#link${semesterType}Sem${academicYear}`);
     await delay(2000);
-
+    page.on('console', msg => {
+      console.log('[PAGE]', msg.text());
+        });
     console.log(`Attempting to find and click ${romanSemester} semester for ${branch}`);
     const clicked = await page.evaluate((romanSem, branchName) => {
       const links = Array.from(document.querySelectorAll('a'));
-
-      console.log(links);
       for (const link of links) {
-        console.log(`Examining romansem: ${romanSem.toLowerCase()}`);
-        if(romanSem === 'i'|| romanSem === 'ii'){
+        console.log(`${romanSem.toLowerCase() === "ist"}`);
+        if(romanSem.toLowerCase() === "ist"|| romanSem.toLowerCase() === "iind" || romanSem.toLowerCase() === 'ist' || romanSem.toLowerCase() === 'iind'){
           if (link.textContent.toLowerCase().includes('b.e.') && link.textContent.toLowerCase().includes(`${romanSem.toLowerCase() + "st"}`) && !link.textContent.toLowerCase().includes('back') && !link.textContent.toLowerCase().includes('semex')) {
-            console.log(link)
+          console.log(
+            link.map(l => l.textContent.trim())
+            );
+
             link.click(); return true;
         }
       }
         if (link.textContent.toLowerCase().includes(romanSem.toLowerCase()) && link.textContent.toLowerCase().includes(branchName.toLowerCase()) && !link.textContent.toLowerCase().includes('back')) {
+            console.log(`Examining romansem: ${romanSem.toLowerCase()}`);
           link.click(); return true;
         }
       }
