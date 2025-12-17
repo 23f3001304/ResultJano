@@ -127,7 +127,7 @@ const processRolls = async (browser, rolls, websiteURL, semesterType, academicYe
 
       console.log(links);
       for (const link of links) {
-        console.log(`Examining romansem: ${romansem}`);
+        console.log(`Examining romansem: ${romanSem.toLowerCase()}`);
         if(romanSem === 'i'|| romansem === 'ii'){
           if (link.textContent.toLowerCase().includes('b.e') && link.textContent.toLowerCase().includes(`${romanSem.toLowerCase() + "st"}`) && !link.textContent.toLowerCase().includes('back') && !link.textContent.toLowerCase().includes('semex')) {
             link.click(); return true;
