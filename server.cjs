@@ -222,6 +222,27 @@ const processRolls = async (browser, rolls, websiteURL, semesterType, academicYe
   
   return results;
 };
+const JOB_TTL_MS = 10 * 60 * 1000; // 10 minutes
+
+const scheduleJobCleanup = (jobId) => {
+  console.log(`Scheduling cleanup for job ${jobId} in 10 minutes`);
+
+  setTimeout(async () => {
+    const job = jobStore[jobId];
+    if (!job) return;
+
+    console.log(`Cleaning up expired job ${jobId}`);
+
+    try {
+      await deleteJobFolder(jobId);
+    } catch (err) {
+      console.error(`Cleanup error for job ${jobId}:`, err);
+    }
+
+    delete jobStore[jobId];
+    console.log(`Job ${jobId} fully removed from memory`);
+  }, JOB_TTL_MS);
+};
 
 app.post('/result', async (req, res) => {
   console.log('Received /result request:', req.body);
@@ -288,12 +309,13 @@ app.post('/result', async (req, res) => {
       await mergePDFs(jobDir, mergedPath);
       console.log(`PDFs successfully merged to ${mergedPath}`);
       
-      await deleteJobFolder(jobId);
+     
       
       jobStore[jobId].status = 'done';
       jobStore[jobId].currentStep = 'complete';
       jobStore[jobId].endTime = Date.now();
       jobStore[jobId].downloadURL = `/merged/${mergedFile}`;
+      scheduleJobCleanup(jobId)
       console.log(`Job ${jobId} completed successfully`);
     } catch (err) {
       console.error(`PDF merge error:`, err);
