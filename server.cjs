@@ -98,6 +98,21 @@ const toRomanNumeral = num => {
   return romanNumerals[num] || num.toString();
 };
 
+const toInt = str => {
+  const map = {
+    IST: 1,
+    IIND: 2,
+    IIIRD: 3,
+    IVTH: 4,
+    VTH: 5,
+    VITH: 6,
+    VIITH: 7,
+    VIIITH: 8
+  };
+  return map[str.toUpperCase()] ?? NaN;
+};
+
+
 const createBrowser = async () => {
   console.log('Launching Puppeteer browser');
   return await puppeteer.launch({ headless: false, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
@@ -126,23 +141,37 @@ const processRolls = async (browser, rolls, websiteURL, semesterType, academicYe
         });
     console.log(`Attempting to find and click ${romanSemester} semester for ${branch}`);
     const clicked = await page.evaluate((romanSem, branchName) => {
+      const toInt = str => {
+    const map = {
+      IST: 1,
+      IIND: 2,
+      IIIRD: 3,
+      IVTH: 4,
+      VTH: 5,
+      VITH: 6,
+      VIITH: 7,
+      VIIITH: 8
+    };
+    return map[str.toUpperCase()] ?? NaN;
+      };
       const links = Array.from(document.querySelectorAll('a'));
       for (const link of links) {
-        console.log(`${romanSem.toLowerCase() === "ist"}`);
-        if(romanSem.toLowerCase() === "ist"|| romanSem.toLowerCase() === "iind" || romanSem.toLowerCase() === 'ist' || romanSem.toLowerCase() === 'iind'){
-          if (link.textContent.toLowerCase().includes('b.e.') && link.textContent.toLowerCase().includes(`${romanSem.toLowerCase() + "st"}`) && !link.textContent.toLowerCase().includes('back') && !link.textContent.toLowerCase().includes('semex')) {
-          console.log(
-            link.map(l => l.textContent.trim())
+                console.log(
+             "link ka content: ",  link.textContent.trim()
             );
-
+        const sem = toInt(romanSem);
+        if (sem === 1 || sem === 2){
+          if (link.textContent.toLowerCase().includes("b.e.") && link.textContent.toLowerCase().includes(`${romanSem.toLowerCase()}`) && !link.textContent.toLowerCase().includes('back') && !link.textContent.toLowerCase().includes('semex')) {
             link.click(); return true;
         }
       }
-        if (link.textContent.toLowerCase().includes(romanSem.toLowerCase()) && link.textContent.toLowerCase().includes(branchName.toLowerCase()) && !link.textContent.toLowerCase().includes('back')) {
+      else {  
+        if (link.textContent.toLowerCase().includes("b.e.") && link.textContent.toLowerCase().includes(romanSem.toLowerCase()) && link.textContent.toLowerCase().includes(branchName.toLowerCase()) && !link.textContent.toLowerCase().includes('back')) {
             console.log(`Examining romansem: ${romanSem.toLowerCase()}`);
           link.click(); return true;
         }
       }
+    }
       return false;
     }, romanSemester, branch);
 
