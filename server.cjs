@@ -126,7 +126,7 @@ const processRolls = async (browser, rolls, websiteURL, semesterType, academicYe
       const links = Array.from(document.querySelectorAll('a'));
       console.log(links);
       for (const link of links) {
-        if (link.textContent.toLowerCase().includes(romanSem.toLowerCase()) && link.textContent.toLowerCase().includes(branchName.toLowerCase())) {
+        if (link.textContent.toLowerCase().includes(romanSem.toLowerCase()) && link.textContent.toLowerCase().includes(branchName.toLowerCase()) && !link.textContent.toLowerCase().includes('back')) {
           link.click(); return true;
         }
       }
