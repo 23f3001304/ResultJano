@@ -115,7 +115,7 @@ const toInt = str => {
 
 const createBrowser = async () => {
   console.log('Launching Puppeteer browser');
-  return await puppeteer.launch({ headless: false, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+  return await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
 };
 
 const processRolls = async (browser, rolls, websiteURL, semesterType, academicYear, romanSemester, branch, jobId) => {
