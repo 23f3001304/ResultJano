@@ -99,7 +99,7 @@ const toRomanNumeral = num => {
 
 const createBrowser = async () => {
   console.log('Launching Puppeteer browser');
-  return await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+  return await puppeteer.launch({ headless: false, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
 };
 
 const processRolls = async (browser, rolls, websiteURL, semesterType, academicYear, romanSemester, branch, jobId) => {
@@ -153,23 +153,30 @@ const processRolls = async (browser, rolls, websiteURL, semesterType, academicYe
       await page.type('#txtRollNo', roll);
       
       // Modified dialog handling for quicker response
-      const dialogPromise = new Promise(resolve => {
-        const dialogHandler = async dialog => {
-          console.log(`Dialog appeared: ${dialog.message()}`);
-          await dialog.accept();
-          page.off('dialog', dialogHandler);  // Clean up event handler
-          resolve(true);
-        };
-        
-        page.once('dialog', dialogHandler);
-      });
+      
       
       // Set a shorter timeout for dialog detection
       const dialogTimeoutPromise = delay(3000).then(() => false);  // Reduced from 8000ms
       
       console.log(`Clicking get result button for ${roll}`);
       
-  
+      const dialogPromise = new Promise(resolve => {
+      const dialogHandler = async dialog => {
+        try {
+          console.log(`Dialog appeared: ${dialog.message()}`);
+          await dialog.accept();
+        } catch (err) {
+          // 👇 THIS IS THE KEY LINE
+          console.log('Dialog already handled, ignoring...');
+        } finally {
+          page.off('dialog', dialogHandler);
+          resolve(true);
+        }
+      };
+
+  page.once('dialog', dialogHandler);
+});
+
       // Click the button and monitor for navigation/download
       await Promise.all([
         page.click('#btnGetResult'),
