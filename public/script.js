@@ -108,11 +108,6 @@ document
       return;
     }
 
-    if (startRoll === endRoll) {
-      alert("Start and end roll numbers cannot be the same.");
-      return;
-    }
-
     const prefixStart = startRoll.slice(0, 6);
     const prefixEnd = endRoll.slice(0, 6);
     if (prefixStart !== prefixEnd) {
