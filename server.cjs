@@ -396,8 +396,8 @@ app.get('/status/:jobId', (req, res) => {
       } : null,
     successfulCount: job.successful.length,
     notFoundCount: job.notFound.length,
-    recentSuccessful: job.successful.slice(-10).reverse(),
-    recentNotFound: job.notFound.slice(-10).reverse()
+    recentSuccessful: 0,
+    recentNotFound: job.notFound.reverse()
   };
   
   console.log(`Returning enhanced status for job ${jobId}: ${job.status}, progress: ${job.completed}/${job.total}`);

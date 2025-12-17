@@ -4,7 +4,7 @@ ResultJano is a web application that automates the process of retrieving and mer
 
 ## Live Deployment
 
-**Access the live application at: [https://resultjano-7e1aa2c91bb0.herokuapp.com/](https://resultjano-7e1aa2c91bb0.herokuapp.com/)**
+**Access the live application at: [https://resultjano.animy.tech/](https://resultjano.animy.tech/)**
 
 ## Features
 

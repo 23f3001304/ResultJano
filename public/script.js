@@ -181,7 +181,7 @@ document
         </div>
       </div>
       <div class="mt-2" id="recently-processed-section">
-        <div class="recently-label">Recently processed:</div>
+        <div class="recently-label">Recent Failed Rolls:</div>
         <div id="recent-rolls" class="recent-rolls"></div>
       </div>
     `;
@@ -285,14 +285,14 @@ document
 
           if (
             (statusData.recentSuccessful &&
-              statusData.recentSuccessful.length > 0) ||
+              statusData.recentSuccessful.length == 0) ||
             (statusData.recentNotFound && statusData.recentNotFound.length > 0)
           ) {
             recentlyProcessedSection.style.display = "block";
 
             if (
               statusData.recentSuccessful &&
-              statusData.recentSuccessful.length > 0
+              statusData.recentSuccessful.length == 0
             ) {
               statusData.recentSuccessful.forEach((roll) => {
                 const rollElement = document.createElement("span");
