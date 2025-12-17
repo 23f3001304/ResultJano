@@ -161,7 +161,9 @@ const processRolls = async (browser, rolls, websiteURL, semesterType, academicYe
             );
         const sem = toInt(romanSem);
         if (sem === 1 || sem === 2){
-          if (link.textContent.toLowerCase().includes("b.e.") && link.textContent.toLowerCase().includes(`${romanSem.toLowerCase()}`) && !link.textContent.toLowerCase().includes('back') && !link.textContent.toLowerCase().includes('semex')) {
+          console.log(`Examining romansem: ${romanSem.toLowerCase()}`);
+          if (link.textContent.toLowerCase().includes("b.e.") && link.textContent.toLowerCase().includes(`${romanSem.toLowerCase()}`) && !link.textContent.toLowerCase().includes('back') && (link.textContent.toLowerCase().includes('semexamination') || !link.textContent.toLowerCase().includes('semex'))) {
+            console.log(`Clicking link for ${romanSem} semester`);
             link.click(); return true;
         }
       }
